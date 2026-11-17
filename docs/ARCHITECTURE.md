@@ -10,7 +10,7 @@
 
 ```
 src/
-  types.ts        shared interfaces (the contract between all layers)
+  types/          shared interfaces (the contract between all layers)
   core/           simulation: pure TypeScript, no DOM/canvas access
   data/           towers, enemies, levels, waves, spells, talents, difficulty tables
   render/         Canvas 2D world renderer (reads GameState, consumes SimEvents)
@@ -81,7 +81,7 @@ never depends on consumers.
 
 ## Presentation
 
-- `render/` implements the `Renderer` interface from `types.ts`. Static layers (ground, path,
+- `render/` implements the `Renderer` interface from `types/`. Static layers (ground, path,
   decorations) are drawn once per level into an offscreen canvas. Entities, particles and
   overlays are drawn every frame. `render/palette.ts` holds the fixed palette and biome shifts.
 - `ui/` owns the main loop, input (pointer + keyboard), HUD and menu screens. It talks to the
