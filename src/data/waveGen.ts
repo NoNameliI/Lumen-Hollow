@@ -14,9 +14,9 @@ export interface WaveSpec {
   budget: number; // threat budget of wave 1
   growth: number; // linear budget growth per wave
   roster: RosterEntry[];
-  /** Hand-authored waves keyed by 1-based wave number; replace generated ones. */
+  /** Hand-authored waves keyed by 1-based wave number; they replace the built ones. */
   overrides?: Record<number, WaveDef>;
-  /** Groups appended to a generated wave (e.g. a boss on the last wave). */
+  /** Groups appended to a built wave (e.g. a boss on the last wave). */
   extras?: Record<number, SpawnGroup[]>;
   /** Every Nth wave is a single-type rush (0 = never). */
   rushEvery?: number;

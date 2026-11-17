@@ -43,6 +43,7 @@ export class Session {
     this.controls = new Controls(this);
     this.hud = new Hud(this);
     this.hints = new Hints(this);
+    if (import.meta.env.DEV) (window as unknown as { __session?: Session }).__session = this;
   }
 
   start(): void {

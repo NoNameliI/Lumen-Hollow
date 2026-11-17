@@ -47,7 +47,7 @@ describe('wave spawner', () => {
     expect(m.path.points).toHaveLength(2);
   });
 
-  it('generated waves are deterministic and grow', () => {
+  it('built waves are deterministic and grow', () => {
     const spec = {
       count: 20,
       budget: 6,

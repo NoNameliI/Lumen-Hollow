@@ -140,13 +140,13 @@ export class App {
   }
 
   showTitle(): void {
-    this.closeAllModals();
+    this.closeModals();
     this.show(() => buildTitle(this));
     this.audio.startMusic('menu');
   }
 
   showMap(): void {
-    this.closeAllModals();
+    this.closeModals();
     this.show(() => buildMap(this));
     this.audio.startMusic('menu');
   }
@@ -201,7 +201,7 @@ export class App {
     this.modals[this.modals.length - 1]?.close();
   }
 
-  closeAllModals(): void {
+  closeModals(): void {
     for (const m of [...this.modals]) m.close();
   }
 
@@ -240,7 +240,7 @@ export class App {
   }
 
   private begin(cfg: RunConfig): void {
-    this.closeAllModals();
+    this.closeModals();
     this.endSession();
     this.backdrop.stop();
     this.screenLayer.classList.remove('open');

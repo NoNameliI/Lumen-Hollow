@@ -1,4 +1,6 @@
 @import './css/base.css';
+@import './css/frame.css';
+@import './css/sidebar.css';
 @import './css/hud.css';
 @import './css/screens.css';
 @import './css/menus.css';
