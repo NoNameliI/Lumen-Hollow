@@ -1,0 +1,253 @@
+/* ---------- map ---------- */
+
+.map-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.map {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.biome {
+  flex: 1;
+  border-radius: 14px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  background: rgba(23, 20, 51, 0.75);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.biome h3 {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.biome.marsh h3 {
+  color: #9bd37a;
+}
+
+.biome.cliffs h3 {
+  color: #d6b48f;
+}
+
+.biome.dusk h3 {
+  color: #c59bff;
+}
+
+.nodes {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.node {
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px;
+}
+
+.node:hover:not(.locked) {
+  border-color: var(--amber);
+  box-shadow: var(--glow);
+}
+
+.node.sel {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 2px var(--teal);
+}
+
+.node.locked {
+  filter: saturate(0.5) brightness(0.8);
+  border-style: dashed;
+}
+
+.node-n {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--amber);
+  color: #20150a;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.node.locked .node-n {
+  background: var(--muted);
+}
+
+.node-name {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.level-panel {
+  width: 430px;
+  overflow-y: auto;
+  padding-bottom: 0;
+}
+
+.level-panel > .row.end {
+  position: sticky;
+  bottom: 0;
+  padding: 10px 0 14px;
+  background: linear-gradient(transparent, var(--bg1) 35%);
+}
+
+.star-rules {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.star-rules li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------- grove ---------- */
+
+.grove-tree {
+  position: relative;
+  margin: 0 auto;
+}
+
+.grove-lines {
+  position: absolute;
+  inset: 0;
+}
+
+.grove-lines line {
+  stroke: var(--line);
+  stroke-width: 3;
+  stroke-dasharray: 6 5;
+}
+
+.grove-lines line.on {
+  stroke: var(--amber);
+  stroke-dasharray: none;
+}
+
+.tnode {
+  position: absolute;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  padding: 8px 12px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tnode.owned {
+  border-color: var(--amber);
+  background: #3a2e18;
+}
+
+.tnode.available {
+  border-color: var(--teal);
+  box-shadow: 0 0 14px rgba(95, 224, 200, 0.3);
+}
+
+.tnode.locked {
+  filter: saturate(0.5) brightness(0.8);
+  border-style: dashed;
+}
+
+.tdesc {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tfoot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.tcost2,
+.tstate {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 700;
+}
+
+.tcost2 {
+  color: var(--amber);
+}
+
+/* ---------- endless ---------- */
+
+.endless-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 20px;
+  min-height: 0;
+}
+
+.challenges {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.challenge {
+  text-align: left;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: relative;
+}
+
+.challenge.on {
+  border-color: var(--teal);
+  background: #17353a;
+}
+
+.mulbadge {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: var(--amber);
+  font-weight: 700;
+}
+
+.mul {
+  color: var(--amber);
+  font-weight: 700;
+}
+

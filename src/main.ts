@@ -1,2 +1,5 @@
-const app = document.getElementById('app');
-if (app) app.textContent = 'Lumen Hollow';
+import './ui/styles.css';
+import { App } from './ui/app';
+
+const host = document.getElementById('app');
+if (host) new App(host);
