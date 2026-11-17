@@ -27,6 +27,19 @@ export function g(enemy: EnemyId, count: number, delay = 0, interval?: number, e
   return { enemy, count, delay, interval: interval ?? ENEMIES[enemy].spacing, entrance };
 }
 
+/** Upper bound on how long one group keeps spawning, so big waves arrive denser, not longer. */
+const MAX_GROUP_SPAN = 14;
+const MAX_RUSH_SPAN = 12;
+const RUSHABLE: EnemyId[] = ['grunt', 'runner', 'swarmling', 'tank'];
+const MAX_PER_WAVE: Partial<Record<EnemyId, number>> = {
+  healer: 5,
+  moth: 18,
+  tank: 12,
+  splitter: 12,
+  shieldbearer: 14,
+  phantom: 12,
+};
+
 function pickWeighted<T extends { weight: number }>(items: T[], r: number): T {
   const total = items.reduce((s, i) => s + i.weight, 0);
   let x = r * total;
@@ -49,24 +62,37 @@ export function generateWave(spec: WaveSpec, w: number, seed: number): WaveDef {
   const pool = spec.roster.filter((r) => r.from <= w && (r.to === undefined || w <= r.to));
   const groups: SpawnGroup[] = [];
   if (pool.length > 0) {
-    const rush = !!spec.rushEvery && w % spec.rushEvery === 0;
+    const rushPool = pool.filter((r) => RUSHABLE.includes(r.enemy));
+    const rush = !!spec.rushEvery && w % spec.rushEvery === 0 && rushPool.length > 0;
     const chosen: RosterEntry[] = [];
     const fresh = pool.find((r) => r.from === w);
-    if (fresh) chosen.push(fresh);
-    const want = rush ? 1 : Math.min(pool.length, 1 + (w % 3 === 0 ? 1 : 0) + (w > 6 && rnd() < 0.5 ? 1 : 0));
+    if (fresh && !rush) chosen.push(fresh);
+    const want = rush ? 1 : Math.min(pool.length, w <= 3 ? 1 : w <= 6 ? 2 : 2 + (rnd() < 0.5 ? 1 : 0));
+    const from = rush ? rushPool : pool;
     let guard = 0;
     while (chosen.length < want && guard++ < 20) {
-      const pick = pickWeighted(pool, rnd());
+      const pick = pickWeighted(from, rnd());
       if (!chosen.includes(pick)) chosen.push(pick);
     }
     const wsum = chosen.reduce((s, c) => s + c.weight, 0);
     let delay = 0.5;
     for (const c of chosen) {
       const def = ENEMIES[c.enemy];
-      const share = (budget * (rush ? 1.15 : 1) * c.weight) / wsum;
+      const share = (budget * (rush ? 1.1 : 1) * c.weight) / wsum;
       let count = Math.max(1, Math.round(share / def.threat));
-      if (c.enemy === 'swarmling') count = Math.max(8, count);
-      const interval = def.spacing * (rush ? 0.7 : 0.85 + rnd() * 0.3);
+      count = Math.min(count, MAX_PER_WAVE[c.enemy] ?? count);
+      if (c.enemy === 'swarmling') {
+        // Swarmlings come in tight packs of 8-14 separated by short breaks.
+        const packs = Math.min(4, Math.max(1, Math.round(count / 12)));
+        const size = Math.max(8, Math.min(14, Math.round(count / packs)));
+        for (let k = 0; k < packs; k++) {
+          groups.push({ enemy: 'swarmling', count: size, delay: delay + k * 5, interval: def.spacing });
+        }
+        delay += packs * 5 * (0.45 + rnd() * 0.2) + 1;
+        continue;
+      }
+      const span = rush ? MAX_RUSH_SPAN : MAX_GROUP_SPAN;
+      const interval = Math.min(def.spacing * (rush ? 0.7 : 0.85 + rnd() * 0.3), span / count);
       const gr: SpawnGroup = { enemy: c.enemy, count, delay, interval };
       groups.push(gr);
       delay = groupDuration(gr) * (0.45 + rnd() * 0.2) + 1;
@@ -113,7 +139,12 @@ export function endlessWave(w: number, seed: number): WaveDef {
   return wave;
 }
 
+/** Extra HP growth in endless mode so every night ends eventually. */
+export function endlessHpRamp(w: number): number {
+  return Math.pow(1.03, w);
+}
+
 /** Boss HP multiplier in endless mode (bosses do not use the wave curve). */
 export function endlessBossHp(w: number): number {
-  return 1 + Math.max(0, w - 10) * 0.08;
+  return (1 + Math.max(0, w - 10) * 0.08) * endlessHpRamp(w);
 }
