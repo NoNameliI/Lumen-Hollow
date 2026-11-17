@@ -1,0 +1,4 @@
+dist
+.sim
+node_modules
+package-lock.json
