@@ -224,7 +224,8 @@ export interface Grid {
   cols: number;
   rows: number;
   cells: CellKind[]; // row-major
-  occupied: (number | 0)[]; // tower id per cell, 0 = free
+  occupied: number[]; // tower id per cell, 0 = free
+  slotsOnly: boolean; // towers only on 'slot' cells
 }
 
 export interface PathRuntime {
@@ -326,6 +327,7 @@ export interface Projectile {
   dur: number; // lobbed flight time, 0 for homing
   speed: number;
   damage: number;
+  crit: boolean;
   stats: TowerStats;
   dtype: DamageType;
   alive: boolean;
@@ -370,9 +372,20 @@ export interface SpellRuntime {
 
 export type GameStatus = 'playing' | 'won' | 'lost';
 
+/** Multipliers derived once from difficulty and challenges. */
+export interface RunMods {
+  hpMul: number;
+  goldMul: number;
+  speedMul: number;
+  armorAdd: number;
+  countMul: number;
+  noSpells: boolean;
+}
+
 export interface GameState {
   config: RunConfig;
   level: LevelDef;
+  mods: RunMods;
   grid: Grid;
   paths: PathRuntime[];
   airPaths: PathRuntime[];
@@ -439,6 +452,7 @@ export interface ViewState {
   hoverCell: Vec2 | null; // cell coordinates
   buildType: TowerId | null;
   buildValid: boolean;
+  buildRange: number; // effective range preview for buildType at hoverCell, cells
   selectedTowerId: number;
   spellTarget: SpellId | null;
   pointer: Vec2 | null; // world cell units
