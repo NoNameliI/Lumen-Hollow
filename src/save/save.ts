@@ -10,6 +10,14 @@ export function detectLang(): LangId {
   return nav && nav.toLowerCase().startsWith('ru') ? 'ru' : 'en';
 }
 
+function prefersReducedMotion(): boolean {
+  try {
+    return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch {
+    return false;
+  }
+}
+
 export function defaultSettings(lang: LangId = 'en'): Settings {
   return {
     sfxVolume: 0.8,
@@ -17,8 +25,9 @@ export function defaultSettings(lang: LangId = 'en'): Settings {
     muted: false,
     lang,
     showDamage: true,
-    reducedMotion: false,
+    reducedMotion: prefersReducedMotion(),
     highContrast: false,
+    quality: 'high',
   };
 }
 

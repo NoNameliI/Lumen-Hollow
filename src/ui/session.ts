@@ -29,6 +29,7 @@ export class Session {
   private raf = 0;
   private last = 0;
   private acc = 0;
+  private hitStop = 0;
   private endTimer = -1;
   private resultsShown = false;
   private disposed = false;
@@ -108,7 +109,10 @@ export class Session {
     const { game, app } = this;
     const state = game.state;
 
-    if (!app.hasModal() && state.status === 'playing') {
+    const stop = app.renderer.takeHitStop();
+    if (stop > 0) this.hitStop = Math.max(this.hitStop, stop);
+    if (this.hitStop > 0) this.hitStop -= dt;
+    else if (!app.hasModal() && state.status === 'playing') {
       this.acc += dt * this.speed;
       const max = MAX_STEPS_PER_FRAME * this.speed;
       let steps = 0;

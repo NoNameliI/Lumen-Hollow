@@ -4,6 +4,9 @@ import type { GameState, SimEvent } from './state';
 
 // ---------- Presentation contracts ----------
 
+/** Visual quality preset; the renderer may lower it automatically when the frame rate drops. */
+export type Quality = 'low' | 'medium' | 'high';
+
 /** UI state the renderer needs to draw previews and selection. */
 export interface ViewState {
   hoverCell: Vec2 | null; // cell coordinates
@@ -14,7 +17,8 @@ export interface ViewState {
   spellTarget: SpellId | null;
   pointer: Vec2 | null; // world cell units
   showDamageNumbers: boolean;
-  reducedMotion: boolean;
+  reducedMotion: boolean; // also disables camera shake and hit-stop
+  quality: Quality;
 }
 
 export interface Renderer {
@@ -23,6 +27,10 @@ export interface Renderer {
   consume(events: SimEvent[], state: GameState): void;
   render(state: GameState, view: ViewState, dtReal: number): void;
   resize(cssWidth: number, cssHeight: number, dpr: number): void;
+  /** Seconds of hit-stop requested since the last call (the UI pauses stepping for that long). */
+  takeHitStop(): number;
+  /** Quality actually used after automatic downgrades. */
+  effectiveQuality(): Quality;
 }
 
 export type SfxName =
@@ -71,6 +79,7 @@ export interface Settings {
   showDamage: boolean;
   reducedMotion: boolean;
   highContrast: boolean;
+  quality: Quality;
 }
 
 export interface LevelProgress {

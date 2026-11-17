@@ -82,6 +82,7 @@ function sanitize(d: Raw, base: SaveData): SaveData {
       showDamage: bool(s.showDamage, true),
       reducedMotion: bool(s.reducedMotion, false),
       highContrast: bool(s.highContrast, false),
+      quality: s.quality === 'low' || s.quality === 'medium' || s.quality === 'high' ? s.quality : 'high',
     };
   }
   out.version = SAVE_VERSION;

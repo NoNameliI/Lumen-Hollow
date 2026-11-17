@@ -1,6 +1,192 @@
-import type { BiomeId, EnemyId } from '../types';
+import type { BiomeId, EnemyId, TowerId } from '../types';
 
-/** Fixed base colours; everything drawn by the renderer references these. */
+/**
+ * Art direction palette. Cold night base, one warm accent (amber lantern light),
+ * muted teal for magic, desaturated red for danger only. See docs/ART_DIRECTION.md.
+ */
+export const P = {
+  ink: '#05060d', // deepest shadow, map frame
+  night: '#0a0f1f',
+  deep: '#121a2e',
+  moss: '#1c2b25',
+  mossLight: '#2f4636',
+  stone: '#474b57',
+  stoneDark: '#23262f',
+  bark: '#2b2119',
+  barkLight: '#4a3a2c',
+  bone: '#bdb5a3', // pale highlights; never pure white
+  amber: '#ffb347', // the warm accent: lanterns, the Heart-tree, rewards
+  amberGlow: '#ffd88a',
+  ember: '#c8641e',
+  teal: '#3f9e98', // magic
+  tealGlow: '#8fe6da',
+  frost: '#9fd6ff',
+  storm: '#b7a4ff',
+  spore: '#a6dc7e',
+  lilac: '#c4abff', // enemy eyes and cores
+  cyan: '#8eeaff',
+  danger: '#b5434c', // damage, last life; use sparingly
+  dangerGlow: '#ff7a7a',
+} as const;
+
+export interface BiomeLook {
+  /** Ground noise ramp, dark -> light. */
+  ground: [string, string, string];
+  moss: string;
+  litter: string; // fallen leaves / needles
+  dirt: string;
+  path: string; // trodden centre of the path
+  pathEdge: string; // where the path blends into the ground
+  pebble: string;
+  foliage: string; // silhouettes of the map frame
+  foliageDark: string;
+  /** Darkness laid over the whole scene before lights cut into it. */
+  darkness: string;
+  darknessAlpha: number;
+  /** Colour grade: tint blended with 'soft-light'. */
+  grade: string;
+  gradeAlpha: number;
+  fog: string;
+  fogDensity: number; // 0..1 base opacity of the drifting fog layers
+  /** Direction long shadows are cast in (unit-ish vector, px per px of height). */
+  shadow: { x: number; y: number };
+  accent: string; // biome-specific secondary light (magic, moonlight...)
+}
+
+export const BIOME: Record<BiomeId, BiomeLook> = {
+  meadow: {
+    ground: ['#111a17', '#18241e', '#223127'],
+    moss: '#28402f',
+    litter: '#3a3326',
+    dirt: '#2a2620',
+    path: '#3a382f',
+    pathEdge: '#26261f',
+    pebble: '#57574c',
+    foliage: '#0d1612',
+    foliageDark: '#05090a',
+    darkness: '#050912',
+    darknessAlpha: 0.5,
+    grade: '#4f8a72',
+    gradeAlpha: 0.1,
+    fog: '#8fb3b8',
+    fogDensity: 0.08,
+    shadow: { x: 0.55, y: 0.3 },
+    accent: '#9fe0b0',
+  },
+  marsh: {
+    ground: ['#0c1717', '#122223', '#1a2e2e'],
+    moss: '#1d3a35',
+    litter: '#2b3427',
+    dirt: '#1d2622',
+    path: '#2e3833',
+    pathEdge: '#1c2522',
+    pebble: '#4a5752',
+    foliage: '#0a1514',
+    foliageDark: '#030808',
+    darkness: '#030d0e',
+    darknessAlpha: 0.58,
+    grade: '#2f9e94',
+    gradeAlpha: 0.13,
+    fog: '#9fd6cf',
+    fogDensity: 0.2,
+    shadow: { x: 0.5, y: 0.35 },
+    accent: '#8fe6da',
+  },
+  cliffs: {
+    ground: ['#15151d', '#1d1d28', '#282734'],
+    moss: '#262c30',
+    litter: '#302b2e',
+    dirt: '#25222a',
+    path: '#3a3744',
+    pathEdge: '#24222c',
+    pebble: '#5b5868',
+    foliage: '#0f0e16',
+    foliageDark: '#05050a',
+    darkness: '#080714',
+    darknessAlpha: 0.54,
+    grade: '#958bd0',
+    gradeAlpha: 0.12,
+    fog: '#b7b0dd',
+    fogDensity: 0.1,
+    shadow: { x: -0.5, y: 0.35 },
+    accent: '#c9c0ff',
+  },
+  dusk: {
+    ground: ['#090d1a', '#0e1425', '#151d33'],
+    moss: '#16213a',
+    litter: '#221f2e',
+    dirt: '#171a28',
+    path: '#242a3d',
+    pathEdge: '#161b2a',
+    pebble: '#434a62',
+    foliage: '#070a14',
+    foliageDark: '#020308',
+    darkness: '#02030a',
+    darknessAlpha: 0.64,
+    grade: '#3a52a8',
+    gradeAlpha: 0.14,
+    fog: '#8c9fd8',
+    fogDensity: 0.18,
+    shadow: { x: 0.45, y: 0.32 },
+    accent: '#a8b8ff',
+  },
+};
+
+/** Colour of the light each tower casts. */
+export const TOWER_LIGHT: Record<TowerId, string> = {
+  spark: '#ffb347',
+  boomcap: '#ff8f4f',
+  frost: '#9fd6ff',
+  storm: '#b7a4ff',
+  owl: '#ffcf86',
+  mold: '#a6dc7e',
+  beacon: '#ffd27a',
+  jar: '#f2df7a',
+};
+
+export interface EnemyTone {
+  body: string; // silhouette
+  rim: string; // faint cold rim light
+  core: string; // eyes / core glow
+}
+
+const SHADE = '#100c18';
+const RIM = '#2c2442';
+
+export const ENEMY_TONE: Record<EnemyId, EnemyTone> = {
+  grunt: { body: SHADE, rim: RIM, core: '#b9a2ff' },
+  runner: { body: '#0b1216', rim: '#1f3a42', core: '#8eeaff' },
+  swarmling: { body: SHADE, rim: RIM, core: '#d2bcff' },
+  tank: { body: '#0e0d16', rim: '#3a3550', core: '#9fc0ff' },
+  moth: { body: '#141022', rim: '#3e3460', core: '#e6d6ff' },
+  healer: { body: '#0c1612', rim: '#22443a', core: '#9ff0b4' },
+  splitter: { body: '#140c1a', rim: '#3c2448', core: '#e0a8ff' },
+  shieldbearer: { body: '#0d0f1c', rim: '#2c3656', core: '#a8d8ff' },
+  phantom: { body: '#1a1d2e', rim: '#4a5274', core: '#d6e0ff' },
+  slime: { body: '#0d1610', rim: '#24402a', core: '#a6dc7e' },
+  grub: { body: '#120c18', rim: '#3a2846', core: '#e0b0ff' },
+  mire: { body: '#0a1411', rim: '#1f3d33', core: '#8ff0c4' },
+  colossus: { body: '#16151d', rim: '#45425a', core: '#a8c8ff' },
+  king: { body: '#07050d', rim: '#2e2348', core: '#e8d0ff' },
+};
+
+/** rgba() string from a hex colour. */
+export function rgba(hex: string, a: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
+/** Mixes two hex colours. */
+export function mix(a: string, b: string, t: number): string {
+  const x = parseInt(a.slice(1), 16);
+  const y = parseInt(b.slice(1), 16);
+  const ch = (s: number) => Math.round(((x >> s) & 255) * (1 - t) + ((y >> s) & 255) * t);
+  return `#${((ch(16) << 16) | (ch(8) << 8) | ch(0)).toString(16).padStart(6, '0')}`;
+}
+
+
+// Legacy palette below is kept only until every module has moved to the art-direction palette above.
+/** @deprecated use P */
 export const C = {
   ink: '#0b0919',
   night: '#15112e',

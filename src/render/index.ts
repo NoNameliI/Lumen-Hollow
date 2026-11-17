@@ -140,6 +140,14 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer {
       fx.drawScreen(c);
     },
 
+    takeHitStop() {
+      return 0;
+    },
+
+    effectiveQuality() {
+      return 'high';
+    },
+
     resize(cssWidth, cssHeight, dpr) {
       canvas.width = Math.max(1, Math.round(cssWidth * dpr));
       canvas.height = Math.max(1, Math.round(cssHeight * dpr));

@@ -27,6 +27,7 @@ export class Controls {
     pointer: null,
     showDamageNumbers: true,
     reducedMotion: false,
+    quality: 'high',
   };
   /** Selected boulder cell, if any. */
   rock: Vec2 | null = null;
@@ -70,6 +71,7 @@ export class Controls {
     const set = this.s.app.save.settings;
     v.showDamageNumbers = set.showDamage;
     v.reducedMotion = set.reducedMotion;
+    v.quality = set.quality;
     const game = this.s.game;
     if (v.selectedTowerId && !game.towerById(v.selectedTowerId)) v.selectedTowerId = 0;
     if (this.rock && cellAt(game.state.grid, this.rock.x, this.rock.y) !== 'rock') this.rock = null;
