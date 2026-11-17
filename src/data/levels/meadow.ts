@@ -4,7 +4,7 @@ import { P } from './util';
 
 const L1_SPEC: WaveSpec = {
   count: 16,
-  budget: 9.5,
+  budget: 10.5,
   growth: 0.16,
   rushEvery: 5,
   roster: [

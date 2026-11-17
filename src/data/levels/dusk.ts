@@ -6,7 +6,7 @@ const ALL: TowerId[] = ['spark', 'boomcap', 'frost', 'storm', 'owl', 'mold', 'be
 
 const L10_SPEC: WaveSpec = {
   count: 22,
-  budget: 17,
+  budget: 15,
   growth: 0.16,
   rushEvery: 7,
   roster: [
@@ -40,7 +40,7 @@ export const LEVEL_10: LevelDef = {
     { key: 'fog', trigger: 'start' },
     { key: 'shield', wave: 3 },
   ],
-  startGold: 380,
+  startGold: 400,
   hpMul: 1.55,
   waveGap: 11,
   waves: generateWaves(L10_SPEC, 1010),
@@ -48,7 +48,7 @@ export const LEVEL_10: LevelDef = {
 
 const L11_SPEC: WaveSpec = {
   count: 24,
-  budget: 18,
+  budget: 16.5,
   growth: 0.16,
   rushEvery: 6,
   roster: [
@@ -80,14 +80,14 @@ export const LEVEL_11: LevelDef = {
   intro: { features: ['gauntlet'] },
   hints: [{ key: 'gauntlet', trigger: 'start' }],
   startGold: 420,
-  hpMul: 1.6,
+  hpMul: 1.5,
   waveGap: 11,
   waves: generateWaves(L11_SPEC, 1111),
 };
 
 const L12_SPEC: WaveSpec = {
   count: 25,
-  budget: 20,
+  budget: 18.5,
   growth: 0.16,
   rushEvery: 7,
   roster: [
@@ -95,9 +95,9 @@ const L12_SPEC: WaveSpec = {
     { enemy: 'runner', from: 1, weight: 1 },
     { enemy: 'swarmling', from: 2, weight: 1 },
     { enemy: 'moth', from: 2, weight: 1.3 },
-    { enemy: 'phantom', from: 3, weight: 2 },
+    { enemy: 'phantom', from: 3, weight: 1.3 },
     { enemy: 'shieldbearer', from: 3, weight: 1.5 },
-    { enemy: 'splitter', from: 4, weight: 1.1 },
+    { enemy: 'splitter', from: 6, weight: 0.8 },
     { enemy: 'healer', from: 5, weight: 1 },
     { enemy: 'tank', from: 4, weight: 1.4 },
   ],
@@ -128,7 +128,7 @@ export const LEVEL_12: LevelDef = {
     { key: 'darkness', wave: 25 },
   ],
   startGold: 450,
-  hpMul: 1.65,
+  hpMul: 1.55,
   waveGap: 11,
   waves: generateWaves(L12_SPEC, 1212),
 };

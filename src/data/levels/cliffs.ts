@@ -6,7 +6,7 @@ const ALL_BUT_JAR = ['spark', 'boomcap', 'frost', 'storm', 'owl', 'mold', 'beaco
 
 const L7_SPEC: WaveSpec = {
   count: 20,
-  budget: 14,
+  budget: 12.5,
   growth: 0.16,
   rushEvery: 6,
   roster: [
@@ -39,14 +39,14 @@ export const LEVEL_7: LevelDef = {
     { key: 'splitter', wave: 3 },
   ],
   startGold: 340,
-  hpMul: 1.4,
+  hpMul: 1.35,
   waveGap: 11,
   waves: generateWaves(L7_SPEC, 707),
 };
 
 const L8_SPEC: WaveSpec = {
   count: 22,
-  budget: 15,
+  budget: 13.5,
   growth: 0.16,
   rushEvery: 7,
   roster: [
@@ -79,7 +79,7 @@ export const LEVEL_8: LevelDef = {
     { key: 'goldrush', wave: 3 },
   ],
   startGold: 330,
-  hpMul: 1.45,
+  hpMul: 1.38,
   waveGap: 11,
   waves: generateWaves(L8_SPEC, 808),
 };

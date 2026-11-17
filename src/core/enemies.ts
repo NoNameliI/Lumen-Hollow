@@ -1,7 +1,7 @@
 import type { EnemyId, EnemyState, GameState, PathRuntime } from '../types';
 import { BOSS_TUNING, ENEMIES, HEAL_INTERVAL, SWAMP_SLOW, hpCurve } from '../data/enemies';
 import { TOWER_REVEAL_RADIUS } from '../data/towers';
-import { endlessBossHp } from '../data/waveGen';
+import { endlessBossHp, endlessHpRamp } from '../data/waveGen';
 import { emit, newId } from './state';
 import { rand } from './rng';
 import { samplePath, type PathSample } from './path';
@@ -31,7 +31,8 @@ export function pickPath(state: GameState, type: EnemyId, entrance: number): Pat
 
 export function enemyHpScale(state: GameState, type: EnemyId, wave: number): number {
   const def = ENEMIES[type];
-  if (def.scaleHp) return hpCurve(wave) * state.level.hpMul * state.mods.hpMul;
+  const night = state.config.endless ? endlessHpRamp(wave) : 1;
+  if (def.scaleHp) return hpCurve(wave) * state.level.hpMul * state.mods.hpMul * night;
   return state.mods.hpMul * (state.config.endless ? endlessBossHp(wave) : 1);
 }
 

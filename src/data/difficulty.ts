@@ -3,7 +3,7 @@ import type { Bonuses, ChallengeDef, ChallengeId, Difficulty, RunMods } from '..
 export const DIFFICULTY: Record<Difficulty, { hpMul: number; goldMul: number }> = {
   calm: { hpMul: 0.75, goldMul: 1.1 },
   normal: { hpMul: 1.0, goldMul: 1.0 },
-  hard: { hpMul: 1.3, goldMul: 0.95 },
+  hard: { hpMul: 1.16, goldMul: 1.0 },
 };
 
 export const DIFFICULTY_ORDER: Difficulty[] = ['calm', 'normal', 'hard'];

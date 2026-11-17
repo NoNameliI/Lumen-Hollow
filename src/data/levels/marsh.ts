@@ -4,7 +4,7 @@ import { P } from './util';
 
 const L4_SPEC: WaveSpec = {
   count: 20,
-  budget: 14.5,
+  budget: 17,
   growth: 0.16,
   rushEvery: 6,
   roster: [
@@ -35,7 +35,7 @@ export const LEVEL_4: LevelDef = {
     { key: 'starfall', trigger: 'start' },
     { key: 'air', trigger: 'firstAir' },
   ],
-  startGold: 280,
+  startGold: 260,
   hpMul: 1.38,
   waveGap: 11,
   waves: generateWaves(L4_SPEC, 404),
@@ -76,7 +76,7 @@ export const LEVEL_5: LevelDef = {
     { key: 'healer', wave: 4 },
   ],
   startGold: 300,
-  hpMul: 1.3,
+  hpMul: 1.25,
   waveGap: 11,
   waves: generateWaves(L5_SPEC, 505),
 };
@@ -116,7 +116,7 @@ export const LEVEL_6: LevelDef = {
     { key: 'mireBoss', trigger: 'bossSpawn' },
   ],
   startGold: 320,
-  hpMul: 1.35,
+  hpMul: 1.3,
   waveGap: 11,
   waves: generateWaves(L6_SPEC, 606),
 };

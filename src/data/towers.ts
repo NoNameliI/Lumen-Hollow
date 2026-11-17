@@ -49,9 +49,9 @@ export const TOWERS: Record<TowerId, TowerDef> = {
     projectileSpeed: 9,
     hotkey: 3,
     tiers: [
-      { damage: 3, rate: 1.0, range: 2.8, slow: 0.35, slowTime: 2 },
-      { damage: 5, rate: 1.05, range: 2.9, slow: 0.4, slowTime: 2.2 },
-      { damage: 7, rate: 1.1, range: 3.1, slow: 0.45, slowTime: 2.4 },
+      { damage: 4, rate: 1.0, range: 2.8, slow: 0.35, slowTime: 2 },
+      { damage: 6, rate: 1.05, range: 2.9, slow: 0.4, slowTime: 2.2 },
+      { damage: 9, rate: 1.1, range: 3.1, slow: 0.45, slowTime: 2.4 },
     ],
     branches: [
       {
@@ -90,15 +90,15 @@ export const TOWERS: Record<TowerId, TowerDef> = {
     costs: [120, 90, 130, 190],
     hotkey: 4,
     tiers: [
-      { damage: 14, rate: 0.9, range: 3.2, chains: 3, chainRange: 1.8 },
-      { damage: 19, rate: 0.95, range: 3.3, chains: 3, chainRange: 1.8 },
-      { damage: 26, rate: 1.0, range: 3.4, chains: 4, chainRange: 1.9 },
+      { damage: 11, rate: 0.9, range: 3.2, chains: 2, chainRange: 1.7 },
+      { damage: 15, rate: 0.95, range: 3.3, chains: 2, chainRange: 1.7 },
+      { damage: 20, rate: 1.0, range: 3.4, chains: 3, chainRange: 1.8 },
     ],
     branches: [
-      { key: 'overload', stats: { damage: 30, rate: 1.0, range: 3.5, chains: 6, chainRange: 2.0 } },
+      { key: 'overload', stats: { damage: 24, rate: 1.0, range: 3.5, chains: 6, chainRange: 2.0 } },
       {
         key: 'static',
-        stats: { damage: 32, rate: 1.05, range: 3.5, chains: 4, chainRange: 1.9, markTime: 3 },
+        stats: { damage: 26, rate: 1.05, range: 3.5, chains: 3, chainRange: 1.8, markTime: 3 },
       },
     ],
   },
@@ -111,13 +111,13 @@ export const TOWERS: Record<TowerId, TowerDef> = {
     costs: [140, 100, 150, 220],
     hotkey: 5,
     tiers: [
-      { damage: 60, rate: 0.4, range: 6.0 },
-      { damage: 85, rate: 0.42, range: 6.3 },
-      { damage: 115, rate: 0.45, range: 6.6 },
+      { damage: 70, rate: 0.42, range: 6.0 },
+      { damage: 100, rate: 0.44, range: 6.3 },
+      { damage: 135, rate: 0.46, range: 6.6 },
     ],
     branches: [
-      { key: 'eagle', stats: { damage: 150, rate: 0.48, range: 7.2, armorPen: 0.5 } },
-      { key: 'hunter', stats: { damage: 150, rate: 0.45, range: 6.8, airMul: 2, bossMul: 2 } },
+      { key: 'eagle', stats: { damage: 180, rate: 0.5, range: 7.2, armorPen: 0.5 } },
+      { key: 'hunter', stats: { damage: 175, rate: 0.48, range: 6.8, airMul: 2, bossMul: 2 } },
     ],
   },
   mold: {
@@ -130,19 +130,19 @@ export const TOWERS: Record<TowerId, TowerDef> = {
     flightTime: 0.9,
     hotkey: 6,
     tiers: [
-      { damage: 2, rate: 0.5, range: 3.0, splash: 1.2, poisonDps: 6, poisonTime: 3 },
-      { damage: 3, rate: 0.52, range: 3.1, splash: 1.25, poisonDps: 9, poisonTime: 3 },
-      { damage: 4, rate: 0.55, range: 3.2, splash: 1.3, poisonDps: 13, poisonTime: 3.2 },
+      { damage: 2, rate: 0.6, range: 3.0, splash: 1.2, poisonDps: 8, poisonTime: 3 },
+      { damage: 3, rate: 0.62, range: 3.1, splash: 1.25, poisonDps: 11, poisonTime: 3 },
+      { damage: 4, rate: 0.65, range: 3.2, splash: 1.3, poisonDps: 15, poisonTime: 3.2 },
     ],
     branches: [
       {
         key: 'plague',
         stats: {
           damage: 5,
-          rate: 0.55,
+          rate: 0.68,
           range: 3.3,
           splash: 1.3,
-          poisonDps: 16,
+          poisonDps: 19,
           poisonTime: 3.5,
           poisonSpread: true,
         },
@@ -151,10 +151,10 @@ export const TOWERS: Record<TowerId, TowerDef> = {
         key: 'acid',
         stats: {
           damage: 5,
-          rate: 0.55,
+          rate: 0.68,
           range: 3.3,
           splash: 1.3,
-          poisonDps: 14,
+          poisonDps: 17,
           poisonTime: 3.5,
           acid: 3,
           acidTime: 4,
@@ -244,5 +244,5 @@ export const HIGH_GROUND_RANGE = 1.25;
 /** Range multiplier in fog outside beacon auras. */
 export const FOG_RANGE = 0.85;
 export const MAX_POISON_STACKS = 5;
-export const CHAIN_FALLOFF = 0.85;
+export const CHAIN_FALLOFF = 0.75;
 export const MARK_BONUS = 1.2;

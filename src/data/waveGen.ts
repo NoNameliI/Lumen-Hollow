@@ -32,12 +32,12 @@ const MAX_GROUP_SPAN = 14;
 const MAX_RUSH_SPAN = 12;
 const RUSHABLE: EnemyId[] = ['grunt', 'runner', 'swarmling', 'tank'];
 const MAX_PER_WAVE: Partial<Record<EnemyId, number>> = {
-  healer: 5,
-  moth: 18,
+  healer: 4,
+  moth: 14,
   tank: 12,
   splitter: 12,
   shieldbearer: 14,
-  phantom: 12,
+  phantom: 8,
 };
 
 function pickWeighted<T extends { weight: number }>(items: T[], r: number): T {
@@ -54,7 +54,10 @@ function groupDuration(gr: SpawnGroup): number {
   return gr.delay + gr.interval * Math.max(0, gr.count - 1);
 }
 
-export function generateWave(spec: WaveSpec, w: number, seed: number): WaveDef {
+/** Special types that should not appear in two consecutive waves. */
+const NO_REPEAT: EnemyId[] = ['moth', 'healer', 'splitter', 'shieldbearer', 'phantom', 'tank'];
+
+export function generateWave(spec: WaveSpec, w: number, seed: number, prev: EnemyId[] = []): WaveDef {
   const override = spec.overrides?.[w];
   if (override) return override;
   const rnd = mulberry32(seed * 7919 + w * 104729);
@@ -68,11 +71,15 @@ export function generateWave(spec: WaveSpec, w: number, seed: number): WaveDef {
     const fresh = pool.find((r) => r.from === w);
     if (fresh && !rush) chosen.push(fresh);
     const want = rush ? 1 : Math.min(pool.length, w <= 3 ? 1 : w <= 6 ? 2 : 2 + (rnd() < 0.5 ? 1 : 0));
-    const from = rush ? rushPool : pool;
+    const fresh2 = (r: RosterEntry) => !(NO_REPEAT.includes(r.enemy) && prev.includes(r.enemy));
+    const from = (rush ? rushPool : pool).filter(fresh2);
+    const conflicts = (a: EnemyId, b: EnemyId) =>
+      (a === 'healer' && b === 'swarmling') || (a === 'swarmling' && b === 'healer');
     let guard = 0;
-    while (chosen.length < want && guard++ < 20) {
+    while (from.length > 0 && chosen.length < want && guard++ < 30) {
       const pick = pickWeighted(from, rnd());
-      if (!chosen.includes(pick)) chosen.push(pick);
+      if (chosen.includes(pick) || chosen.some((c) => conflicts(c.enemy, pick.enemy))) continue;
+      chosen.push(pick);
     }
     const wsum = chosen.reduce((s, c) => s + c.weight, 0);
     let delay = 0.5;
@@ -83,7 +90,7 @@ export function generateWave(spec: WaveSpec, w: number, seed: number): WaveDef {
       count = Math.min(count, MAX_PER_WAVE[c.enemy] ?? count);
       if (c.enemy === 'swarmling') {
         // Swarmlings come in tight packs of 8-14 separated by short breaks.
-        const packs = Math.min(4, Math.max(1, Math.round(count / 12)));
+        const packs = Math.min(3, Math.max(1, Math.round(count / 12)));
         const size = Math.max(8, Math.min(14, Math.round(count / packs)));
         for (let k = 0; k < packs; k++) {
           groups.push({ enemy: 'swarmling', count: size, delay: delay + k * 5, interval: def.spacing });
@@ -105,7 +112,10 @@ export function generateWave(spec: WaveSpec, w: number, seed: number): WaveDef {
 
 export function generateWaves(spec: WaveSpec, seed: number): WaveDef[] {
   const out: WaveDef[] = [];
-  for (let w = 1; w <= spec.count; w++) out.push(generateWave(spec, w, seed));
+  for (let w = 1; w <= spec.count; w++) {
+    const prev = out.length ? out[out.length - 1].groups.map((g) => g.enemy) : [];
+    out.push(generateWave(spec, w, seed, prev));
+  }
   return out;
 }
 
@@ -130,8 +140,24 @@ export const ENDLESS_SPEC: WaveSpec = {
 
 const ENDLESS_BOSSES: EnemyId[] = ['grub', 'mire', 'colossus', 'king'];
 
+const endlessCache = new Map<number, WaveDef[]>();
+
+function endlessBase(w: number, seed: number): WaveDef {
+  let list = endlessCache.get(seed);
+  if (!list) {
+    list = [];
+    endlessCache.set(seed, list);
+  }
+  while (list.length < w) {
+    const n = list.length + 1;
+    const prev = list.length ? list[list.length - 1].groups.map((g) => g.enemy) : [];
+    list.push(generateWave(ENDLESS_SPEC, n, seed, prev));
+  }
+  return list[w - 1];
+}
+
 export function endlessWave(w: number, seed: number): WaveDef {
-  const wave = generateWave(ENDLESS_SPEC, w, seed);
+  const wave = endlessBase(w, seed);
   if (w % 10 === 0) {
     const boss = ENDLESS_BOSSES[(w / 10 - 1) % ENDLESS_BOSSES.length];
     return { groups: [...wave.groups, g(boss, 1, 4)] };

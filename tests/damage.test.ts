@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { damageEnemy, mitigate } from '../src/core/damage';
 import { spawnEnemy } from '../src/core/enemies';
+import { DIFFICULTY } from '../src/data/difficulty';
 import { testGame, testLevel } from './helpers';
 
 function setup(type: Parameters<typeof spawnEnemy>[1]) {
@@ -76,6 +77,6 @@ describe('damage pipeline', () => {
   it('HP follows the wave curve and difficulty', () => {
     const game = testGame(testLevel(), { difficulty: 'hard' });
     const e = spawnEnemy(game.state, 'grunt', { wave: 10 });
-    expect(e.maxHp).toBeCloseTo(40 * (1 + 0.9 + 0.4) * 1.3);
+    expect(e.maxHp).toBeCloseTo(40 * (1 + 0.9 + 0.4) * DIFFICULTY.hard.hpMul);
   });
 });
